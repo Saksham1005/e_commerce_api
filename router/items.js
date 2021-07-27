@@ -18,7 +18,7 @@ router.post('/create/items',authcd,async(req,res)=>{
         }
         res.status(201).send({message:req.message,array})
     } catch (error) {
-        res.status(404).send({error,message:"No"})
+        res.status(404).send({error,message:"Items are not created!!"})
     }
 })
 
@@ -120,6 +120,42 @@ router.delete('/me/delete/item',auth,async(req,res)=>{
     } catch (error) {
         res.status(400).send()
     }    
+})
+
+//Review system
+router.patch('/item/review/:name',auth,async(req,res)=>{
+    if(!req.user){
+        res.send('You are not authenticated!!')
+    }
+    try{
+      const review=req.body.review
+      const name=req.params.name
+      const item=await Item.findOne({name,'owner.user_id':req.user._id})
+      item.reviews.push({ review, user_id:req.user._id.toString() })
+      await item.save()
+      res.send('Review is succesfully posted!!')
+    }
+    catch(error){
+        res.send("This item does'nt belong to you!!")
+    }
+})
+
+router.delete('/item/delete/review/:name',auth,async(req,res)=>{
+    if(!req.user){
+        res.send('You are not authenticated!!')
+    }
+    try {
+      const name=req.params.name
+      const item=await Item.findOne({name,'owner.user_id':req.user._id})
+      item.reviews=item.reviews.filter((review)=>{
+        return review.user_id!=req.user._id
+      })
+      await item.save()
+      res.send('Your review for the item-'+name+' is deleted')
+    } catch (error) {
+        res.send("This item does'nt belongs to you!!")        
+    }
+
 })
 
 module.exports=router

@@ -29,6 +29,16 @@ const item_Schema=new mongoose.Schema({
     //         }
     //     }
     // },
+    reviews:[{
+        review:{
+            type:String,
+            required:false,
+            trim:true,
+        },
+        user_id:{
+            type:String,
+        }
+    }],
     owner:[{
         user_id:{
         type:mongoose.Schema.Types.ObjectId,
@@ -45,6 +55,7 @@ item_Schema.methods.toJSON=function(){
     const obj=items.toObject()
     
     delete obj.owner
+    // delete obj.reviews
     return obj
 }
 
