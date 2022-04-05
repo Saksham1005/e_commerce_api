@@ -71,7 +71,7 @@ User_schema.methods.toJSON=function(){
     return obj
 }
 
-//Defining the methods for and individual users
+//Defining the methods for an individual users
 User_schema.methods.generateAuthToken=(async function(){
     const user=this
     const token=jwt.sign({_id:(user._id).toString()},process.env.JWT_SECRET,{expiresIn:'7 days'})

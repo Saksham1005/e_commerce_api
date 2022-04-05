@@ -81,12 +81,10 @@ router.patch('/me/select/items',auth,async(req,res)=>{
 
 //Get items selected by the user
 router.get('/me/items',auth,async(req,res)=>{
-    //const items=await Item.find({});
     try {
         const sort={}
         if(req.query.sortBy){
             const value=req.query.sortBy.split(':')
-            //console.log(value);
             sort[value[0]]=(value[1]==='desc')? -1 : 1
         }
         await req.user.populate({
